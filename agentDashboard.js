@@ -48,15 +48,77 @@ async function processTaxData(farmerTax, smeTax) {
         "Nov",
         "Dec",
       ];
+    
+    // now fill the missing month
+  let currentMonth = new Date().getMonth() + 1;
+  let currentYear = new Date().getFullYear();
 
-    for (let i = 0; i < taxDataArray.length; i++) {
-        const month = taxDataArray[i].month_no;
-        taxDataArray[i].month = monthName[month - 1];
-        delete taxDataArray[i].month_no;
+  let monthYears = [];
+  let last12Months = [];
+  for (let i = 0; i < 12; i++) {
+    last12Months.push(currentMonth);
+    monthYears.push(currentYear);
+    currentMonth--;
+    if (currentMonth == 0) {
+      currentMonth = 12;
+      currentYear--;
+    }
+  }
 
+  // now we have the last 12 months in sorted order
+  // now we have to check if there is any missing month in the taxDataArray
+  // if there is any missing month, then we have to add that month with 0 amount
+
+  //  now iterate through the taxDataArray following the last12Months array, and add a field named amount as well as month name (Jan-24, Feb-24, Mar-24, ....)
+
+  let last12MonthsIndex = 0;
+  let last12MonthsLength = last12Months.length;
+
+  // taxDataArrayReturned is the array that will be returned, it will contain the last 12 months data
+
+  let taxDataArrayReturned = [];
+
+  for (
+    last12MonthsIndex = 0;
+    last12MonthsIndex < last12MonthsLength;
+    last12MonthsIndex++
+  ) {
+    let month_no = last12Months[last12MonthsIndex];
+
+    // check if the month_no is present in the taxDataArray, if present, find the index and add the amount and month name with year in the taxDataArrayReturned array
+    // if not present, add the month_no with 0 amount
+
+    let found = false;
+    for (
+      let taxDataArrayIndex = 0;
+      taxDataArrayIndex < taxDataArray.length;
+      taxDataArrayIndex++
+    ) {
+      if (taxDataArray[taxDataArrayIndex].month_no == month_no) {
+        // month_no is present in the taxDataArray
+        found = true;
+        taxDataArrayReturned.push({
+          month: monthName[month_no - 1] + "-" + monthYears[last12MonthsIndex].toString().slice(2),
+          taxAmount: taxDataArray[taxDataArrayIndex].taxAmount,
+        });
+        break;
+      }
     }
 
-    return taxDataArray;
+    // if the month_no is not present in the taxDataArray, add the month_no with 0 amount
+    if (!found) {
+      taxDataArrayReturned.push({
+        month: monthName[month_no - 1] + "-" + monthYears[last12MonthsIndex].toString().slice(2),
+        amount: 0,
+      });
+    }
+  }
+
+  // reverse the taxDataArrayReturned array
+  taxDataArrayReturned.reverse();
+
+
+    return taxDataArrayReturned;
 
 }
 
