@@ -1,6 +1,7 @@
 const supabase = require("./db.js");
 const router = require("express").Router();
 
+
 async function processTaxData(farmerTax, smeTax) {
     // create a new object, with keys as month number and values as tax amount, summing up farmer and sme taxamount
 
@@ -65,8 +66,20 @@ router.post("/", async (req, res) => {
     FROM "User" where "id" = $1;`,
     [req.body.id]
   );
-  const basicData = response[0];
-  const unionId = basicData.unionId;
+  const basicDataTemp = response[0];
+  const unionId = basicDataTemp.unionId;
+
+  // basicData contains all the data except unionId
+  const basicData = {
+    name: basicDataTemp.name,
+    nid: basicDataTemp.nid,
+    email: basicDataTemp.email,
+    phone: basicDataTemp.phone,
+    avatarLink: basicDataTemp.avatarLink,
+    permanentAddress: basicDataTemp.permanentAddress,
+    dob: basicDataTemp.dob,
+    unionName: basicDataTemp.unionName,
+  };
 
   let unionDetails = await supabase.any(
     `SELECT "name", "noFarmers", "noSme", "noVendors", "totalFarmerLoan", "totalSmeLoan", "totalBuy", "totalSell", "totalTax", "availableBudget"\
