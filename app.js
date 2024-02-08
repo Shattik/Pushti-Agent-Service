@@ -10,16 +10,18 @@ app.use(cors({ origin: "*" }));
 
 const loanRouter = require("./agentLoan");
 const dashboardRouter = require("./agentDashboard");
+const inventoryRouter = require("./agentInventory");
 
 app.use("/loan", loanRouter);
 app.use("/dashboard", dashboardRouter);
-
+app.use("/inventory", inventoryRouter);
 
 app.listen(PORT, async () => {
   // console.log(`Pushti-AuthenticationMS is running on port ${PORT}`);
   console.log(`Agent Service listening on port ${PORT}`);
   try {
-    let serviceRegisterUrl = String(process.env.serviceRegistryUrl) + "/register";
+    let serviceRegisterUrl =
+      String(process.env.serviceRegistryUrl) + "/register";
 
     await axios.post(serviceRegisterUrl, {
       name: process.env.selfName,
@@ -47,12 +49,11 @@ const deregisterService = async () => {
 };
 
 const gracefulShutdown = async () => {
-    await deregisterService();
-    process.exit(0);
+  await deregisterService();
+  process.exit(0);
 };
 
 // Listen for termination and interrupt signals
-process.on('SIGTERM', gracefulShutdown); // For termination signal
-process.on('SIGINT', gracefulShutdown); // For interrupt signal
-process.on('uncaughtException', gracefulShutdown); // For uncaught exceptions
-
+process.on("SIGTERM", gracefulShutdown); // For termination signal
+process.on("SIGINT", gracefulShutdown); // For interrupt signal
+process.on("uncaughtException", gracefulShutdown); // For uncaught exceptions
