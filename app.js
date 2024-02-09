@@ -11,10 +11,12 @@ app.use(cors({ origin: "*" }));
 const loanRouter = require("./agentLoan");
 const dashboardRouter = require("./agentDashboard");
 const inventoryRouter = require("./agentInventory");
+const buyRouter = require("./agentBuy");
 
 app.use("/loan", loanRouter);
 app.use("/dashboard", dashboardRouter);
 app.use("/inventory", inventoryRouter);
+app.use("/buy", buyRouter);
 
 app.listen(PORT, async () => {
   // console.log(`Pushti-AuthenticationMS is running on port ${PORT}`);
