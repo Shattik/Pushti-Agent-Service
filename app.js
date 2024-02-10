@@ -12,11 +12,13 @@ const loanRouter = require("./agentLoan");
 const dashboardRouter = require("./agentDashboard");
 const inventoryRouter = require("./agentInventory");
 const buyRouter = require("./agentBuy");
+const sellRouter = require("./agentSell");
 
 app.use("/loan", loanRouter);
 app.use("/dashboard", dashboardRouter);
 app.use("/inventory", inventoryRouter);
 app.use("/buy", buyRouter);
+app.use("/sell", sellRouter);
 
 app.listen(PORT, async () => {
   // console.log(`Pushti-AuthenticationMS is running on port ${PORT}`);

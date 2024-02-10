@@ -1,55 +1,54 @@
 const supabase = require("./db.js");
 const router = require("express").Router();
 
-
 async function processTaxData(farmerTax, smeTax) {
-    // create a new object, with keys as month number and values as tax amount, summing up farmer and sme taxamount
+  // create a new object, with keys as month number and values as tax amount, summing up farmer and sme taxamount
 
-    let taxData = {};
-    for (let i = 0; i < farmerTax.length; i++) {
-        const month = farmerTax[i].month_no;
-        const taxAmount = farmerTax[i].taxamount;
-        if (taxData[month]) {
-            taxData[month] += taxAmount;
-        } else {
-            taxData[month] = taxAmount;
-        }
+  let taxData = {};
+  for (let i = 0; i < farmerTax.length; i++) {
+    const month = farmerTax[i].month_no;
+    const taxAmount = farmerTax[i].taxamount;
+    if (taxData[month]) {
+      taxData[month] = parseFloat(taxData[month]) +  parseFloat(taxAmount);
+    } else {
+      taxData[month] = parseFloat(taxAmount);
     }
+  }
 
-    for (let i = 0; i < smeTax.length; i++) {
-        const month = smeTax[i].month_no;
-        const taxAmount = smeTax[i].taxamount;
-        if (taxData[month]) {
-            taxData[month] += taxAmount;
-        } else {
-            taxData[month] = taxAmount;
-        }
+  for (let i = 0; i < smeTax.length; i++) {
+    const month = smeTax[i].month_no;
+    const taxAmount = smeTax[i].taxamount;
+    if (taxData[month]) {
+      taxData[month] = parseFloat(taxData[month]) +  parseFloat(taxAmount);
+    } else {
+      taxData[month] = parseFloat(taxAmount);
     }
-    
-    // convert the object to an array of objects
-    let taxDataArray = [];
-    for (const [key, value] of Object.entries(taxData)) {
-        taxDataArray.push({ month_no: key, taxAmount: value });
-    }
+  }
 
-    // console.log(taxDataArray);
-    // now replace month number with month name
-    const monthName = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "July",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ];
-    
-    // now fill the missing month
+  // convert the object to an array of objects
+  let taxDataArray = [];
+  for (const [key, value] of Object.entries(taxData)) {
+    taxDataArray.push({ month_no: key, taxAmount: value });
+  }
+
+  // console.log(taxDataArray);
+  // now replace month number with month name
+  const monthName = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "July",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  // now fill the missing month
   let currentMonth = new Date().getMonth() + 1;
   let currentYear = new Date().getFullYear();
 
@@ -98,7 +97,10 @@ async function processTaxData(farmerTax, smeTax) {
         // month_no is present in the taxDataArray
         found = true;
         taxDataArrayReturned.push({
-          month: monthName[month_no - 1] + "-" + monthYears[last12MonthsIndex].toString().slice(2),
+          month:
+            monthName[month_no - 1] +
+            "-" +
+            monthYears[last12MonthsIndex].toString().slice(2),
           taxAmount: taxDataArray[taxDataArrayIndex].taxAmount,
         });
         break;
@@ -108,8 +110,11 @@ async function processTaxData(farmerTax, smeTax) {
     // if the month_no is not present in the taxDataArray, add the month_no with 0 amount
     if (!found) {
       taxDataArrayReturned.push({
-        month: monthName[month_no - 1] + "-" + monthYears[last12MonthsIndex].toString().slice(2),
-        amount: 0,
+        month:
+          monthName[month_no - 1] +
+          "-" +
+          monthYears[last12MonthsIndex].toString().slice(2),
+        taxAmount: 0,
       });
     }
   }
@@ -117,9 +122,7 @@ async function processTaxData(farmerTax, smeTax) {
   // reverse the taxDataArrayReturned array
   taxDataArrayReturned.reverse();
 
-
-    return taxDataArrayReturned;
-
+  return taxDataArrayReturned;
 }
 
 router.post("/", async (req, res) => {
