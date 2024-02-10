@@ -192,7 +192,7 @@ router.post("/request/submit/farmer", async (req, res) => {
         const buyMsUrl = await getBuyMsUrl();
         if(buyMsUrl){
             let { buyReq, buyItems } = req.body;
-            // check buy MS for details. Just give famer nid instead of farmer id.
+            // check buy MS for details. Just give farmer nid instead of farmer id.
             let farmerNid = buyReq.farmerNid;
 
             let data = await supabase.any(`select "id" from "User" where "nid" = $1`, [farmerNid]);
@@ -228,7 +228,7 @@ router.post("/request/submit/sme", async (req, res) => {
         const buyMsUrl = await getBuyMsUrl();
         if(buyMsUrl){
             let { buyReq, buyItems } = req.body;
-            // check buy MS for details. Just give famer nid instead of farmer id.
+            // check buy MS for details. Just give sme nid instead of sme id.
             let smeNid = buyReq.smeNid;
 
             let data = await supabase.any(`select "id" from "User" where "nid" = $1`, [smeNid]);
