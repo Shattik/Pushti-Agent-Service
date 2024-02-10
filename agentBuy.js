@@ -133,59 +133,59 @@ router.post("/request/sme", async (req, res) => {
     }
 });
 
-router.post("/request/info/farmer", async (req, res) => {
-    try{
-        const buyMsUrl = await getBuyMsUrl();
-        if(buyMsUrl){
-            let farmer_nid = req.body.farmer_nid;
-            const farmer_info = await axios.post(buyMsUrl + "/buy-request/farmer/info", 
-            {
-                farmer_nid: farmer_nid,
-            });
-            res.status(200).json(farmer_info.data);
-        }
-        else{
-            res.json({
-                success: false,
-                message: "Failed to get Buy MS URL",
-            });
-        }
-    }
-    catch(error){
-        console.error(error);
-        res.json({
-            success: false,
-            message: "Internal Server Error",
-        });
-    }
-});
-
-router.post("/request/info/sme", async (req, res) => {
-    try{
-        const buyMsUrl = await getBuyMsUrl();
-        if(buyMsUrl){
-            let sme_nid = req.body.sme_nid;
-            const sme_info = await axios.post(buyMsUrl + "/buy-request/sme/info", 
-            {
-                sme_nid: sme_nid,
-            });
-            res.status(200).json(sme_info.data);
-        }
-        else{
-            res.json({
-                success: false,
-                message: "Failed to get Buy MS URL",
-            });
-        }
-    }
-    catch(error){
-        console.error(error);
-        res.json({
-            success: false,
-            message: "Internal Server Error",
-        });
-    }
-});
+// router.post("/request/info/farmer", async (req, res) => {
+//     try{
+//         const buyMsUrl = await getBuyMsUrl();
+//         if(buyMsUrl){
+//             let farmer_nid = req.body.farmer_nid;
+//             const farmer_info = await axios.post(buyMsUrl + "/buy-request/farmer/info", 
+//             {
+//                 farmer_nid: farmer_nid,
+//             });
+//             res.status(200).json(farmer_info.data);
+//         }
+//         else{
+//             res.json({
+//                 success: false,
+//                 message: "Failed to get Buy MS URL",
+//             });
+//         }
+//     }
+//     catch(error){
+//         console.error(error);
+//         res.json({
+//             success: false,
+//             message: "Internal Server Error",
+//         });
+//     }
+// });
+// 
+// router.post("/request/info/sme", async (req, res) => {
+//     try{
+//         const buyMsUrl = await getBuyMsUrl();
+//         if(buyMsUrl){
+//             let sme_nid = req.body.sme_nid;
+//             const sme_info = await axios.post(buyMsUrl + "/buy-request/sme/info", 
+//             {
+//                 sme_nid: sme_nid,
+//             });
+//             res.status(200).json(sme_info.data);
+//         }
+//         else{
+//             res.json({
+//                 success: false,
+//                 message: "Failed to get Buy MS URL",
+//             });
+//         }
+//     }
+//     catch(error){
+//         console.error(error);
+//         res.json({
+//             success: false,
+//             message: "Internal Server Error",
+//         });
+//     }
+// });
 
 router.post("/request/submit/farmer", async (req, res) => {
     try{
